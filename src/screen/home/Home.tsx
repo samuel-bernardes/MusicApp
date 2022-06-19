@@ -1,25 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native';
-import { Audio } from 'expo-av';
-
 import HomeView from './Home.view';
 
-import spotify_search from '../../service/spotifySearch/spotifySearch';
+import { search } from '../../service/spotifySearch/spotifySearch';
 
 import Styles from './Home.style';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Header from '../../components/header/Header';
 import useProfile from '../../contexts/profile/useProfile';
-
-interface IList {
-    songs: Array<ISongs>;
-    offset: number;
-    isFetching: boolean;
-    isEmpty: boolean;
-    spotify_token: any;
-    isTokenFetching: boolean;
-}
+import useGoogleToken from '../../contexts/googleToken/useToken';
 
 export interface ISongs {
     album: string;
@@ -35,38 +25,16 @@ export default function Home() {
 
     const classes = Styles;
 
-    const route = useRoute();
+    const navigation = useNavigation();
 
-    const token = route.params.token;
+    const { googleToken } = useGoogleToken();
 
     const [text, setText] = useState<string>()
     const [songs, setSongs] = useState<ISongs[]>()
     const [loading, setLoading] = useState<boolean>(true)
-    const [list, setList] = useState<IList>({
-        songs: [],
-        offset: 0,
-        isFetching: false,
-        isEmpty: false,
-        spotify_token: null,
-        isTokenFetching: false
-    })
-    const [sound, setSound] = useState<any>();
-    const [songId, setSongId] = useState<string>("");
-    const [isPlaying, setIsPlaying] = useState<boolean>(false);
-    const {profile, setNewProfile} = useProfile();
+    const { setNewProfile } = useProfile();
 
-    useEffect(() => {
-        loadProfile();
-    }, [])
-
-    useEffect(() => {
-        return sound
-            ? () => {
-                console.log('Unloading Sound');
-                sound.unloadAsync();
-            }
-            : undefined;
-    }, [sound]);
+    useEffect(() => componentMount(), [])
 
     useEffect(() => {
         if (!text) {
@@ -74,82 +42,46 @@ export default function Home() {
         }
     }, [text])
 
-    useEffect(() => {
-        console.log(songId)
-    }, [songId])
-
-
     function handleSearchChange(text) {
         setText(text);
     }
 
+    function componentMount() {
+        loadProfile();
+    }
+
+    async function onSearch(text: string) {
+        const data = await search({ limit: 30, offset: 0, value: text });
+        setSongs(data);
+    };
+
     async function loadProfile() {
-        const response = await fetch(`https://www.googleapis.com/oauth2/v2/userinfo?alt=json&access_token=${token}`);
+        const response = await fetch(`https://www.googleapis.com/oauth2/v2/userinfo?alt=json&access_token=${googleToken}`);
         const userinfo = await response.json();
         setNewProfile(userinfo);
         setLoading(false);
     }
 
-    async function playSound(uri: string) {
+    async function playSound(item: ISongs) {
 
-        const { sound } = await Audio.Sound.createAsync(
-            { uri: uri }
-        );
-
-        setSound(sound);
-        setSongId(songId);
-        await sound.playAsync();
-
-    }
-
-    async function loadNextPage() {
-
-        const localList = list;
-
-        if (localList.isFetching || localList.isEmpty) {
-            return;
-        }
-
-        localList.isFetching = true;
-
-        const newSongs = await spotify_search({
-            offset: list.offset,
-            limit: 10,
-            q: text
-        })
-
-        setSongs(newSongs);
-
-        console.log("novos sons", songs)
-
-        if (newSongs.length === 0) {
-            console.log('no songs found');
-            localList.isEmpty = true;
-            setList(localList);
-        }
-
-        localList.isFetching = false;
-        localList.songs[localList.songs + newSongs],
-            localList.offset = localList.offset + 20
-
-        setList(localList)
+        navigation.navigate('Music', {
+            itemId: item.id,
+            music: item.preview_url,
+            title: item.title,
+            image: item.imageUri,
+            artist: item.artist,
+            album: item.album
+        });
 
     }
 
     function iconFunction() {
-        const localList = list;
-
-        localList.isEmpty = false;
-        localList.offset = 0;
-        localList.songs = [];
-        setList(localList);
-
-        loadNextPage();
+        onSearch(text)
     }
 
     function renderList({ item }: { item: ISongs }) {
         return (
-            <TouchableOpacity onPress={() => playSound(item.preview_url)}>
+            <TouchableOpacity onPress={() => playSound(item)}>
                 <View style={classes.musicBox}>
                     <Image
                         style={classes.image}
@@ -163,18 +95,6 @@ export default function Home() {
             </TouchableOpacity>
         )
     }
-
-    /*     async function refreshToken() {
-        const localList = list;
-        localList.isTokenFetching = true;
-        setList(localList);
- 
-        const newToken = await spotify_token();
- 
-        localList.spotify_token = newToken,
-            localList.isFetching = false
-        setList(localList);
-    } */
 
     function bannerVisible() {
         if (!songs) return;

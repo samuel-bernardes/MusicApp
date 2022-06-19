@@ -9,12 +9,6 @@ export default function LoginHome() {
 
     const navigation = useNavigation();
 
-    const {profile, setNewProfile} = useProfile();
-
-    useEffect(() => {
-        console.log('profile', profile);
-    },[])
-
     function loginButton(){
         navigation.navigate('Login');
     }

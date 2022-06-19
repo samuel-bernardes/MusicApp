@@ -3,14 +3,17 @@ import LoginView from './Login.view';
 import * as AuthSession from 'expo-auth-session';
 
 import { useNavigation } from "@react-navigation/native";
+import useGoogleToken from '../../contexts/googleToken/useToken';
 
-const CLIENT_ID = process.env.CLIENT_ID;
-const REDIRECT_URI = process.env.REDIRECT_URI;
+const CLIENT_ID = process.env.CLIENT_ID_GOOGLE;
+const REDIRECT_URI = process.env.REDIRECT_URI_GOOGLE;
 
 
 export default function Login() {
 
     const navigation = useNavigation();
+
+    const { setNewGoogleToken } = useGoogleToken();
 
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
@@ -25,10 +28,9 @@ export default function Login() {
             .startAsync({ authUrl });
 
         if (response.type === 'success') {
-            navigation.navigate('Root', {
-                screen: 'Home',
-                params: { token: response.params.access_token },
-            })
+            setNewGoogleToken(response.params.access_token)
+            
+            navigation.navigate('Root', { screen: 'Home' })
         }
 
     }

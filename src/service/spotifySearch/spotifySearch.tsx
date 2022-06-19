@@ -1,48 +1,67 @@
-const apiPrefix = 'https://api.spotify.com/v1'
+import axios from "axios";
+import { getAccessToken } from "../spotifyToken/spotifyToken";
 
-export default async ({
-    offset,
-    limit,
-    q,
-    //spotify_token
-}) => {
-    const uri = `${apiPrefix}/search?type=track,playlist&limit=${limit}&offset=${offset}&q=${encodeURIComponent(q)}*`;
-    console.log('search begin, uri=', uri);
+const baseUrl = "https://api.spotify.com/v1";
 
-    const res = await fetch(uri, {
-        method: 'GET',
-        headers: {
-            Authorization: `Bearer BQDEcznq8hZo-KPGjDOf1YofR8mB5uokXkfEVWzEOWCIKLamHCpHb05Q45eqUmq6ebWNYnSpElz9SIWJfLE`,
+type Props = {
+    offset: number;
+    limit: number;
+    value: string;
+};
+
+export const search = async ({ offset, limit, value }: Props) => {
+    const { access_token } = await getAccessToken();
+
+    const data = await axios(
+        `${baseUrl}/search?type=track&limit=${limit}&offset=${offset}&q=${encodeURIComponent(
+            value
+        )}*`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authorization: `Bearer ${access_token}`,
+            },
         }
-    });
+    )
+        .then((res) => {
+            const json = res.data.tracks.items;
+            return json.map(item => ({
+                id: item.id,
+                title: item.name,
+                popularity: item.popularity,
+                artist: item.artists
+                    ? item.artists[0].name
+                    : undefined,
+                album: item.album.name,
+                is_playable: item.is_playable,
+                preview_url: item.preview_url,
+                imageUri: item.album.images
+                    ? item.album.images[0].url
+                    : undefined
+            }));
 
-    const json = await res.json();
+        })
+        .catch((err) => {
 
-    if (!res.ok) {
-        return [];
-    }
+            console.log(err);
+        });
 
-    const {
-        tracks: {
-            items,
-        }
-    } = json;
+    return data;
+};
 
-
-    return items.map(item => ({
-        id: item.id,
-        title: item.name,
-        popularity: item.popularity,
-        artist: item.artists
-            ? item.artists[0].name
-            : undefined,
-        album: item.album.name,
-        is_playable: item.is_playable,
-        preview_url: item.preview_url,
-        imageUri: item.album.images
-            ? item.album.images[0].url
-            : undefined
-    }));
-
-
-}
+/* return items.map(item => ({
+    id: item.id,
+    title: item.name,
+    popularity: item.popularity,
+    artist: item.artists
+        ? item.artists[0].name
+        : undefined,
+    album: item.album.name,
+    is_playable: item.is_playable,
+    preview_url: item.preview_url,
+    imageUri: item.album.images
+        ? item.album.images[0].url
+        : undefined
+})); */

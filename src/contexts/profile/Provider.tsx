@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import ProfileContext from "./Context";
 import { UserInfo } from "./types";
@@ -13,11 +13,6 @@ const ProfileProvider: React.FC = ({ children }) => {
     const state = useMemo(() => {
         return { setNewProfile, profile };
     }, [profile]);
-
-    useEffect(() => {
-        console.log('profile', profile);
-    }, [profile])
-
 
     return (
         <ProfileContext.Provider value={state}>

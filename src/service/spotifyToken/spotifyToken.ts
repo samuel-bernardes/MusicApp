@@ -1,25 +1,27 @@
-import base64 from 'react-native-base64';
+import axios from "axios";
+import base64 from "react-native-base64";
 
-const apiPrefix = "https://accounts.spotify.com/api"
+const CLIENT_ID = process.env.CLIENT_ID_SPOTIFY;
+const CLIENT_SECRET = process.env.CLIENT_SECRET_SPOTIFY;
 
-const client_id = "f048d52f04554f98a82322b065b9d7a9"
-const client_secret = "85aa4bcd5d184a188f05e5bdab00b897"
+const baseUrl = "https://accounts.spotify.com/api";
+const Authorization = `Basic ${base64.encode(CLIENT_ID + ":" + CLIENT_SECRET)}`;
 
-const base64credentials = base64.encode(client_id + ':' + client_secret)
-
-
-export default async () => {
-    console.log('token begin')
-    const res = await fetch(`${apiPrefix}/token`, {
-        method: 'POST',
-        headers: {
-            Authorization: `Basic ${base64credentials}`,
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: 'grant_type=client_credentials',
+export const getAccessToken = async () => {
+  const data = await axios(`${baseUrl}/token`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization: Authorization,
+    },
+    data: "grant_type=client_credentials",
+  })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.log(err);
     });
-    const json = await res.json();
-    const newToken = json.acess_token;
-    console.log('token is', newToken);
-    return newToken;
-}
+
+  return data;
+};

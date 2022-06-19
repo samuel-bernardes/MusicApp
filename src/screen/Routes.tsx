@@ -11,6 +11,7 @@ import Profile from './profile/Profile';
 import Header from '../components/header/Header';
 import LoginHome from './loginHome/LoginHome'
 import Login from './login/Login';
+import Music from './music/Music';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -39,7 +40,7 @@ function Root() {
 					backgroundColor: "#27153E",
 					height: 80,
 					borderTopWidth: 0,
-				  },
+				},
 				tabBarActiveTintColor: '#FFFFFF',
 				tabBarInactiveTintColor: '#3C2D51',
 				tabBarShowLabel: false
@@ -87,6 +88,12 @@ export default function Routes() {
 				<Stack.Screen
 					name="Login"
 					component={Login}
+					options={{ headerShown: false }}
+				/>
+
+				<Stack.Screen
+					name="Music"
+					component={Music}
 					options={{ headerShown: false }}
 				/>
 
