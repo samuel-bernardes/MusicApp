@@ -1,6 +1,6 @@
 # MusicApp
 
-##Aplicativo que simula uma plataforma de streaming de músicas
+### Aplicativo que simula uma plataforma de streaming de músicas
 
 Esse app foi criado com intuito de aprimorar minhas habilidades com react native e treinar conceitos de api rest e UI/UX.
 
