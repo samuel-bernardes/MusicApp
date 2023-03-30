@@ -5,23 +5,11 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import Styles from './Player.style';
 
-interface IPlayer {
-    playPosition: number;
-    playDuration: number;
-}
 
-export default function Player(props: IPlayer) {
+
+export default function Player() {
 
     const classes = Styles;
-
-    const { playPosition, playDuration } = props;
-
-    function calcBar(){
-        if(playPosition !== null && playDuration !== null){
-            return playPosition / playDuration;
-        }
-        return 0;
-    }
 
     return (
         <View style={classes.container}>
@@ -32,6 +20,7 @@ export default function Player(props: IPlayer) {
                 minimumTrackTintColor="#FFF"
                 maximumTrackTintColor="#3C2D51"
                 thumbTintColor="#A4FF8E"
+                value={0.8}
             />
         </View>
     );

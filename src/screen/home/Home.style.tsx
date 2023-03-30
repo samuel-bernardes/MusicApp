@@ -2,11 +2,6 @@ import { StyleSheet } from "react-native";
 
 
 export default StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: 20,
-        paddingHorizontal: 12
-    },
     title: {
         color: '#EDEDED',
         fontSize: 26,
@@ -29,7 +24,7 @@ export default StyleSheet.create({
         fontSize: 20,
         color: "#FFFFFF",
     },
-    button:{
+    button: {
         backgroundColor: '#A4FF8E',
         alignItems: 'center',
         borderRadius: 12,
@@ -59,5 +54,14 @@ export default StyleSheet.create({
         borderRadius: 12,
         alignSelf: 'center',
         width: "95%"
+    },
+    recomedationBox: {
+        marginTop: 20,
+        borderRadius: 12,
+        alignSelf: 'center',
+        width: "95%"
+    },
+    recommendationsContainer: {
+        flexDirection: 'row'
     }
 });

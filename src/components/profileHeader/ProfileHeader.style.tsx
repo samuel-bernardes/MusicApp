@@ -1,19 +1,20 @@
 import { StyleSheet } from "react-native";
+import { colors } from "../../theme/colors";
 
 export default StyleSheet.create({
     container: {
-        width: '90%',
-        alignSelf: 'center',
+        width: '100%',
         alignItems: 'center',
+        justifyContent: 'space-between',
         paddingTop: 20,
-        backgroundColor: '#27153E',
-        flexDirection: 'row',
-        justifyContent: 'space-between'
+        paddingHorizontal: 24,
+        paddingRight: 125,
+        backgroundColor: colors.brand.primary,
+        flexDirection: 'row'
     },
     title: {
         fontWeight: 'bold',
         letterSpacing: 2,
-        marginLeft: 15,
         fontSize: 24,
         color: '#FFF'
     }

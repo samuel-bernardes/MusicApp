@@ -4,6 +4,7 @@ import { Audio } from 'expo-av';
 
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { BackHandler } from 'react-native';
+import useMusic from '../../contexts/music/useMusic';
 
 interface ISoundObj {
     androidImplementation: string;
@@ -30,11 +31,15 @@ export default function Music() {
 
     const route = useRoute();
 
+    const { music } = useMusic();
+
     const [currentTimer, setCurrentTimer] = useState<string>("00:00");
 
     const [soundObj, setSoundObj] = useState<any>(null);
 
     const [playbackObj, setPlaybackObj] = useState(null);
+
+    const [counter, setCounter] = useState(0);
 
     useEffect(() => {
         BackHandler.addEventListener('hardwareBackPress', goBack);
@@ -45,13 +50,13 @@ export default function Music() {
     });
 
     async function handleMusic() {
-        if (!route.params.music) return;
+        if (!music) return;
         //primeira vez
         if (soundObj === null) {
 
             const playbackObj = new Audio.Sound();
             const status = await playbackObj.loadAsync(
-                { uri: route.params.music },
+                { uri: music.music },
                 { shouldPlay: true }
             );
             return setPlaybackObj(playbackObj), setSoundObj(status);
@@ -66,11 +71,12 @@ export default function Music() {
         // unpause
         if (soundObj.isLoaded && !soundObj.isPlaying) {
             const status = await playbackObj.setStatusAsync({ shouldPlay: true });
-            
+
             return setSoundObj(status);
         }
-        
+
     }
+
 
     function goBack() {
         if (!playbackObj) return navigation.goBack(), true;
@@ -82,13 +88,12 @@ export default function Music() {
 
     return (
         <MusicView
-            image={route.params.image}
-            album={route.params.album}
-            musicTitle={route.params.title}
-            artist={route.params.artist}
+            image={music.image}
+            album={music.album}
+            musicTitle={music.title}
+            artist={music.artist}
             currentTimer={currentTimer}
-            playDuration={soundObj?.playableDurationMillis}
-            playPosition={soundObj?.positionMillis}
+            totalTimer={soundObj?.playableDurationMillis}
             isPlaying={soundObj?.isPlaying}
             handleMusic={handleMusic}
         />

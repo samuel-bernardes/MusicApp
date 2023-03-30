@@ -1,7 +1,10 @@
 import React from 'react';
 
-import { Text, View, FlatList, StatusBar, TouchableOpacity } from 'react-native';
+import { Text, View, FlatList, StatusBar, TouchableOpacity, ScrollView } from 'react-native';
+import Container from '../../components/container/Container';
+import Recommendations from '../../components/recommendations/Recommendations';
 import Search from '../../components/search/Search';
+import { colors } from '../../theme/colors';
 import Styles from './Home.style';
 
 interface ISearch {
@@ -20,7 +23,7 @@ export default function HomeView(props: ISearch) {
     const classes = Styles;
 
     return (
-        <View style={classes.container}>
+        <Container color={colors.brand.primary} >
             <StatusBar hidden={true} />
             <Search text={text} handleSearchChange={handleSearchChange} iconFunction={iconFunction} />
 
@@ -33,12 +36,24 @@ export default function HomeView(props: ISearch) {
                 </TouchableOpacity>
             </View>
 
+            {data.length == 0 && (
+                <View style={classes.recomedationBox} >
+                    <Text style={classes.bannerText}>Recomendados</Text>
+                    <ScrollView style={classes.recommendationsContainer} horizontal={true} showsHorizontalScrollIndicator={false}>
+
+                    
+                        <Recommendations />
+                        <Recommendations />
+                    </ScrollView>
+                </View>
+            )}
+
             <FlatList
                 style={{ overflow: "hidden", marginBottom: 20, marginTop: 4 }}
                 data={data}
                 renderItem={renderList}
             />
 
-        </View>
+        </Container>
     );
 }

@@ -3,7 +3,7 @@ import React from 'react';
 import { View, SafeAreaView, Text, StatusBar, TextInput } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import Styles from './Login.style'
 
@@ -29,7 +29,7 @@ export default function LoginView(props: ILoginView) {
 
                 <StatusBar hidden={true} />
                 <View style={classes.box}>
-                    <Icon name="headphones" size={42} color="#A4FF8E" />
+                    <Icon name="compact-disc" size={42} color="#A4FF8E" />
                     <Text style={[classes.title, { marginLeft: 6 }]}>Musicly</Text>
                 </View>
 

@@ -2,7 +2,6 @@ import React, { useMemo, useState } from "react";
 
 import GooleTokenContext from "./Context";
 
-
 const GoogleTokenProvider: React.FC = ({ children }) => {
     const [googleToken, setGoogleToken ] = useState<string>();
 

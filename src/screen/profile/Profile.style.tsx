@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { colors } from "../../theme/colors";
 
 
 export default StyleSheet.create({
@@ -7,24 +8,27 @@ export default StyleSheet.create({
         paddingTop: 40,
         paddingHorizontal: 12
     },
-    title: {
-        color: '#EDEDED',
-        fontSize: 26,
-        fontWeight: 'bold',
-        marginBottom: 20
+    profileImage: {
+        width: 160,
+        height: 160,
+        borderRadius: 100
     },
-    profile: {
-        flexDirection: 'row',
+    imageBox: {
+        width: '100%',
         alignItems: 'center',
-        alignSelf: 'center',
-        width: "95%",
-        borderRadius: 18,
-        paddingTop: 12,
-        paddingBottom: 32,
-        backgroundColor: "#444444"
+        marginTop: 4
+    },
+    nameTitle: {
+        color: colors.text.tertiary,
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginVertical: 12
     },
     infosText: {
-        color: "#EDEDED",
+        color: colors.text.tertiary,
+        width: '65%',
+        textAlign: 'center',
+        opacity: 0.8,
         fontSize: 14
     },
     infos: {
@@ -32,7 +36,7 @@ export default StyleSheet.create({
         marginLeft: 20
     },
     editBox: {
-        backgroundColor: "#EDEDED",
+        backgroundColor: colors.text.tertiary,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
@@ -54,7 +58,7 @@ export default StyleSheet.create({
         paddingVertical: 12
     },
     data: {
-        color: "#EDEDED",
+        color: colors.text.tertiary,
         fontWeight: "bold",
         lineHeight: 24,
         width: "85%",

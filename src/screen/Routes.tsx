@@ -1,17 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
 
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import Home from './home/Home';
 import Profile from './profile/Profile';
-import Header from '../components/header/Header';
 import LoginHome from './loginHome/LoginHome'
 import Login from './login/Login';
 import Music from './music/Music';
+import Header from '../components/header/Header';
+import { colors } from '../theme/colors';
+import ProfileHeader from '../components/profileHeader/ProfileHeader';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -22,27 +24,27 @@ function Root() {
 		<Tab.Navigator
 			initialRouteName="Home"
 			screenOptions={({ route }) => ({
-				tabBarIcon: ({ color }) => {
+				tabBarIcon: ({ color, focused }) => {
 					let iconName;
 
 					if (route.name === 'Home') {
 						iconName = "home"
 					} else if (route.name === 'Playlist') {
-						iconName = "playlist-play";
+						iconName = "search";
 					} else if (route.name === 'Random') {
-						iconName = "shuffle";
+						iconName = "star";
 					} else if (route.name === 'Profile') {
-						iconName = "account-circle";
+						iconName = "user";
 					}
-					return <Icon name={iconName} size={30} color={color} />;
+					return <Icon name={iconName} size={30} color={color} solid={focused} />;
 				},
 				tabBarStyle: {
-					backgroundColor: "#27153E",
+					backgroundColor: colors.brand.primary,
 					height: 80,
 					borderTopWidth: 0,
 				},
-				tabBarActiveTintColor: '#FFFFFF',
-				tabBarInactiveTintColor: '#3C2D51',
+				tabBarActiveTintColor: colors.white,
+				tabBarInactiveTintColor: colors.brand.secondary,
 				tabBarShowLabel: false
 			})}
 		>
@@ -50,13 +52,13 @@ function Root() {
 			<Tab.Screen
 				name="Home"
 				component={Home}
-				options={{ headerShown: false }}
+				options={{ header: () => (<Header />) }}
 			/>
 
 			<Tab.Screen
 				name="Playlist"
 				component={Home}
-				options={{ headerShown: false }}
+				options={{ header: () => (<Header />) }}
 			/>
 
 			<Tab.Screen
@@ -68,7 +70,7 @@ function Root() {
 			<Tab.Screen
 				name="Profile"
 				component={Profile}
-				options={{ headerShown: false }}
+				options={{ header: () => (<ProfileHeader />) }}
 			/>
 
 		</Tab.Navigator>
@@ -76,12 +78,20 @@ function Root() {
 };
 
 export default function Routes() {
+
 	return (
 		<NavigationContainer>
 			<Stack.Navigator>
+
 				<Stack.Screen
 					name="LoginHome"
 					component={LoginHome}
+					options={{ headerShown: false }}
+				/>
+
+				<Stack.Screen
+					name="Home"
+					component={Root}
 					options={{ headerShown: false }}
 				/>
 
@@ -102,6 +112,8 @@ export default function Routes() {
 					component={Root}
 					options={{ headerShown: false }}
 				/>
+
+
 
 			</Stack.Navigator>
 		</NavigationContainer>

@@ -3,6 +3,8 @@ import React from 'react';
 import { View, SafeAreaView, StatusBar, Image, Text } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import Container from '../../components/container/Container';
+import { colors } from '../../theme/colors';
 import Player from './components/player/Player';
 import ToolBar from './components/toolbar/ToolBar';
 
@@ -15,8 +17,7 @@ interface IMusicView {
     musicTitle: string;
     currentTimer: string;
     isPlaying: boolean;
-    playPosition: number;
-    playDuration: number;
+    totalTimer: number;
     handleMusic: () => void;
 }
 
@@ -24,11 +25,11 @@ export default function MusicView(props: IMusicView) {
 
     const classes = Styles;
 
-    const { image, album, musicTitle, artist, currentTimer, isPlaying, playPosition, playDuration, handleMusic } = props;
+    const { image, album, musicTitle, artist, totalTimer, isPlaying, handleMusic } = props;
 
     return (
 
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#27153E' }}>
+        <Container color={colors.brand.primary}>
             <StatusBar hidden={true} />
             <View style={classes.container}>
 
@@ -48,14 +49,14 @@ export default function MusicView(props: IMusicView) {
 
                 <Text style={[classes.textAlbum, classes.textColor, { opacity: 0.9 }]}>{artist}</Text>
 
-                <Player playPosition={playPosition} playDuration={playDuration}/>
+                <Player />
 
-                <ToolBar currentTimer={currentTimer} isPlaying={isPlaying} handleMusic={handleMusic} />
+                <ToolBar totalTimer={totalTimer} isPlaying={isPlaying} handleMusic={handleMusic} />
 
 
             </View>
 
-        </SafeAreaView>
+        </Container>
 
     );
 }

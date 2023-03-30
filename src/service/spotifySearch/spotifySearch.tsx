@@ -50,18 +50,3 @@ export const search = async ({ offset, limit, value }: Props) => {
 
     return data;
 };
-
-/* return items.map(item => ({
-    id: item.id,
-    title: item.name,
-    popularity: item.popularity,
-    artist: item.artists
-        ? item.artists[0].name
-        : undefined,
-    album: item.album.name,
-    is_playable: item.is_playable,
-    preview_url: item.preview_url,
-    imageUri: item.album.images
-        ? item.album.images[0].url
-        : undefined
-})); */

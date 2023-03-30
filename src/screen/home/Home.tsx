@@ -5,11 +5,11 @@ import HomeView from './Home.view';
 import { search } from '../../service/spotifySearch/spotifySearch';
 
 import Styles from './Home.style';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import Header from '../../components/header/Header';
 import useProfile from '../../contexts/profile/useProfile';
 import useGoogleToken from '../../contexts/googleToken/useToken';
+import { getStoreObject, setStoreObject } from '../../modules/AsyncStorage.module';
+import useMusic from '../../contexts/music/useMusic';
 
 export interface ISongs {
     album: string;
@@ -25,7 +25,7 @@ export default function Home() {
 
     const classes = Styles;
 
-    const navigation = useNavigation();
+    const navigation: any = useNavigation();
 
     const { googleToken } = useGoogleToken();
 
@@ -33,6 +33,7 @@ export default function Home() {
     const [songs, setSongs] = useState<ISongs[]>()
     const [loading, setLoading] = useState<boolean>(true)
     const { setNewProfile } = useProfile();
+    const { setNewMusic } = useMusic();
 
     useEffect(() => componentMount(), [])
 
@@ -62,16 +63,19 @@ export default function Home() {
         setLoading(false);
     }
 
-    async function playSound(item: ISongs) {
+    function playSound(item: ISongs) {
 
-        navigation.navigate('Music', {
+        const music = {
             itemId: item.id,
             music: item.preview_url,
             title: item.title,
             image: item.imageUri,
             artist: item.artist,
             album: item.album
-        });
+        }
+        setNewMusic(music)
+
+        navigation.navigate("Music")
 
     }
 
@@ -105,17 +109,16 @@ export default function Home() {
 
     return (
         !loading ? (
-            <SafeAreaView style={{ flex: 1, backgroundColor: '#27153E' }}>
-                <Header />
-                <HomeView
-                    text={text}
-                    data={songs}
-                    bannerVisible={bannerVisible()}
-                    iconFunction={iconFunction}
-                    renderList={renderList}
-                    handleSearchChange={handleSearchChange}
-                />
-            </SafeAreaView>
+
+            <HomeView
+                text={text}
+                data={songs}
+                bannerVisible={bannerVisible()}
+                iconFunction={iconFunction}
+                renderList={renderList}
+                handleSearchChange={handleSearchChange}
+            />
+
         ) : (
             <View style={{ flex: 1, justifyContent: "center", backgroundColor: '#27153E' }}>
                 <ActivityIndicator size={100} color="#fafafa" />
