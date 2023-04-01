@@ -7,8 +7,10 @@ import { CountDown } from '../../../../components/countDown/CountDown';
 import Styles from './ToolBar.style';
 
 interface IToolbar {
-    totalTimer: number;
-    isPlaying: boolean;
+    currentTimer: number,
+    isPlaying: boolean,
+    currentMillis: number,
+    setCurrentTimer: (currentTimer: number) => void,
     handleMusic: () => void;
 }
 
@@ -16,19 +18,18 @@ export default function ToolBar(props: IToolbar) {
 
     const classes = Styles;
 
-    const { isPlaying, totalTimer, handleMusic } = props;
+    const { isPlaying, currentTimer, currentMillis, setCurrentTimer, handleMusic } = props;
 
-    function convertMs(ms: number) {
-
-        if(!ms) return 0;
-        
-        return Math.floor((ms/1000) % 60) / 60;
+    function formatTime(time) {
+        return time < 10 ? `0${time}` : time;
     }
 
     return (
         <View style={classes.container}>
 
-            <Text style={[classes.timer, { opacity: 0.8 }]}>00:30</Text>
+            <Text style={classes.timer} >
+                {"00:" + formatTime(currentMillis)}
+            </Text>
 
             <Icon name="backward" size={20} color="#FAFAFA" />
 
@@ -47,9 +48,7 @@ export default function ToolBar(props: IToolbar) {
 
             <Icon name="forward" size={18} color="#FAFAFA" />
 
-            {/*  <Text style={[classes.timer, { opacity: 0.8 }]}>00:30</Text> */}
-
-            <CountDown minutes={convertMs(totalTimer)} isPaused={!isPlaying} onProgress={() => console.log('onProguess')} style={classes.timer} />
+            <Text style={[classes.timer, { opacity: 0.8 }]}>00:30</Text>
 
         </View>
     );

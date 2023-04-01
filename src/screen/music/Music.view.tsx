@@ -11,21 +11,26 @@ import ToolBar from './components/toolbar/ToolBar';
 import Styles from './Music.style'
 
 interface IMusicView {
-    image: string;
-    album: string;
-    artist: string;
-    musicTitle: string;
-    currentTimer: string;
-    isPlaying: boolean;
-    totalTimer: number;
-    handleMusic: () => void;
+    image: string,
+    album: string,
+    artist: string,
+    musicTitle: string,
+    currentTimer: number,
+    isPlaying: boolean,
+    totalTimer: number,
+    currentMillis: number,
+    setCurrentTimer: (currentTimer: number) => void,
+    setSongPosition: (currentPosition: number) => void,
+    handleMusic: () => void
 }
 
 export default function MusicView(props: IMusicView) {
 
     const classes = Styles;
 
-    const { image, album, musicTitle, artist, totalTimer, isPlaying, handleMusic } = props;
+    const { image, album, musicTitle, artist, totalTimer, isPlaying, currentTimer,
+        currentMillis, setCurrentTimer, handleMusic, setSongPosition,
+    } = props;
 
     return (
 
@@ -49,10 +54,15 @@ export default function MusicView(props: IMusicView) {
 
                 <Text style={[classes.textAlbum, classes.textColor, { opacity: 0.9 }]}>{artist}</Text>
 
-                <Player />
+                <Player totalDuration={totalTimer} currentMillis={currentMillis} setSongPosition={setSongPosition} />
 
-                <ToolBar totalTimer={totalTimer} isPlaying={isPlaying} handleMusic={handleMusic} />
-
+                <ToolBar
+                    currentTimer={currentTimer}
+                    isPlaying={isPlaying}
+                    currentMillis={currentMillis}
+                    handleMusic={handleMusic}
+                    setCurrentTimer={setCurrentTimer}
+                />
 
             </View>
 

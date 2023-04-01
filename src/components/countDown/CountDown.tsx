@@ -1,58 +1,48 @@
 import React, { useState, useEffect } from 'react'
-import { Text, View, StyleSheet } from 'react-native'
-
-const minutesToMillis = (min) => min * 1000 * 60
+import { Text, View } from 'react-native'
 
 const formatTime = (time) => time < 10 ? `0${time}` : time;
 
-
 export const CountDown = ({
-    minutes,
     isPaused,
-    onProgress,
-    style
-    //onEnd
+    style,
+    setCurrentTimer,
+    currentTimer
 }) => {
-    const [millis, setMillis] = useState(minutesToMillis(minutes))
+    const [millis, setMillis] = useState(currentTimer);
     const interval = React.useRef(null)
-    const minute = Math.floor(millis / 1000 / 60 ) % 60;
-    const second = Math.floor(millis / 1000 ) % 60;
 
-    const countDown = () => {
+    function countDown() {
         setMillis((time) => {
-            if(time === 0) {
+            if (time === 30) {
                 clearInterval(interval.current)
+                setMillis(0);
+                setCurrentTimer(0);
                 return time;
             }
-            const timeLeft = time - 1000
+            const timeLeft = time + 1;
             return timeLeft;
         })
     }
 
     useEffect(() => {
-        if(isPaused){ 
+        if (isPaused) {
             if (interval.current) clearInterval(interval.current)
             return;
         }
-        interval.current = setInterval(countDown, 1000)
-        return () => clearInterval(interval.current)
+        interval.current = setInterval(() => {
+            countDown();
+        }, 1000)
+        return () => clearInterval(interval.current);
     }, [isPaused])
 
     useEffect(() => {
-        onProgress(millis / minutesToMillis(minutes))
-        /* if (millis === 0){
-            onEnd()
-        } */
-    }, [millis])
+        setMillis(currentTimer);
+    }, [currentTimer])
 
-    useEffect(() => {
-        setMillis(minutesToMillis(minutes))
-    }, [minutes])
-
-    return ( 
+    return (
         <View>
-            <Text style={style}>{ formatTime(minute) }:{ formatTime(second) }</Text>
+            <Text style={style}>0:{formatTime(millis)}</Text>
         </View>
     )
 }
-

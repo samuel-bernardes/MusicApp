@@ -1,28 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import MusicView from './Music.view';
-import { Audio } from 'expo-av';
+import { Audio, AVPlaybackStatus } from 'expo-av';
 
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { BackHandler } from 'react-native';
 import useMusic from '../../contexts/music/useMusic';
 
-interface ISoundObj {
-    androidImplementation: string;
-    didJustFinish: boolean;
-    DurationMillis: number;
-    isBuffering: boolean;
-    isLoading: boolean;
-    isLooping: boolean;
-    isMuted: boolean;
-    isPlaying: boolean;
-    playableDurationMillis: number;
-    positionMillis: number;
-    progressUpdateMillis: number;
-    rate: number;
-    shouldCorrectPitch: boolean;
-    shouldPlay: boolean;
-    uri: string;
-    volume: number;
+interface ISoundStatus {
+    isLoaded: boolean,
+    isLoading: boolean,
+    error: any,
+    isPlaying: boolean,
+    positionMillis: number,
+    durationMillis: number
 }
 
 export default function Music() {
@@ -33,57 +23,138 @@ export default function Music() {
 
     const { music } = useMusic();
 
-    const [currentTimer, setCurrentTimer] = useState<string>("00:00");
+    const [currentTimer, setCurrentTimer] = useState<number>(0);
 
-    const [soundObj, setSoundObj] = useState<any>(null);
+    const [sound, setSound] = useState<Audio.Sound | null>(null);
 
-    const [playbackObj, setPlaybackObj] = useState(null);
+    const [millis, setMillis] = useState(currentTimer);
 
-    const [counter, setCounter] = useState(0);
+    const interval = React.useRef(null)
 
-    useEffect(() => {
-        BackHandler.addEventListener('hardwareBackPress', goBack);
-
-        return () => {
-            BackHandler.removeEventListener('hardwareBackPress', () => true);
-        };
+    const [status, setStatus] = useState<ISoundStatus>({
+        isLoaded: false,
+        isLoading: false,
+        error: null,
+        isPlaying: false,
+        positionMillis: 0,
+        durationMillis: 0,
     });
 
-    async function handleMusic() {
-        if (!music) return;
-        //primeira vez
-        if (soundObj === null) {
-
-            const playbackObj = new Audio.Sound();
-            const status = await playbackObj.loadAsync(
+    useEffect(() => {
+        async function loadSound() {
+            const { sound } = await Audio.Sound.createAsync(
                 { uri: music.music },
-                { shouldPlay: true }
+                { shouldPlay: false }
             );
-            return setPlaybackObj(playbackObj), setSoundObj(status);
+            setSound(sound);
+            setCurrentTimer(status.positionMillis);
         }
+        loadSound();
 
-        // pause 
-        if (soundObj.isLoaded && soundObj.isPlaying) {
-            const status = await playbackObj.setStatusAsync({ shouldPlay: false });
-            return setSoundObj(status);
+        return () => {
+            if (status.isPlaying && sound) {
+                sound.stopAsync();
+            }
+            if (sound) {
+                sound.unloadAsync();
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('beforeRemove', async () => {
+            if (sound) {
+                await sound.stopAsync();
+                await sound.unloadAsync();
+            }
+        });
+        return unsubscribe;
+    }, [navigation, sound]);
+
+    useEffect(() => {
+        if (status.positionMillis === status.durationMillis && sound) {
+            sound.replayAsync();
+            setStatus({
+                ...status,
+                isPlaying: true,
+            });
         }
+    }, [status.positionMillis, status.durationMillis]);
 
-        // unpause
-        if (soundObj.isLoaded && !soundObj.isPlaying) {
-            const status = await playbackObj.setStatusAsync({ shouldPlay: true });
-
-            return setSoundObj(status);
+    useEffect(() => {
+        if (status.positionMillis === status.durationMillis && sound) {
+            sound.replayAsync();
+            setStatus({
+                ...status,
+                isPlaying: true,
+            });
         }
+    }, [status.positionMillis, status.durationMillis]);
 
+    function countDown() {
+        setMillis((time) => {
+            if (time === 30) {
+                clearInterval(interval.current)
+                setMillis(0);
+                setCurrentTimer(0);
+                return time;
+            }
+            const timeLeft = time + 1;
+            return timeLeft;
+        })
     }
 
+    useEffect(() => {
+        if (!status.isPlaying) {
+            if (interval.current) clearInterval(interval.current)
+            return;
+        }
+        interval.current = setInterval(() => {
+            countDown();
+        }, 1000)
+        return () => clearInterval(interval.current);
+    }, [status.isPlaying])
 
-    function goBack() {
-        if (!playbackObj) return navigation.goBack(), true;
-        playbackObj.stopAsync();
-        playbackObj.unloadAsync();
-        navigation.goBack();
-        return true;
+    useEffect(() => {
+        setMillis(currentTimer);
+    }, [currentTimer])
+
+    function togglePlayPause() {
+        if (!sound) {
+            return;
+        }
+
+        if (status.isPlaying) {
+            sound.pauseAsync();
+            setStatus({
+                ...status,
+                isPlaying: false,
+            });
+        } else {
+            sound.playAsync();
+
+            setStatus({
+                ...status,
+                isPlaying: true,
+            });
+        }
+    }
+
+    async function setPosition(positionMillis) {
+        if (!sound) {
+            return;
+        }
+
+        try {
+            await sound.setPositionAsync(positionMillis * 1000);
+            setCurrentTimer(positionMillis);
+            setStatus({
+                ...status,
+                positionMillis: positionMillis * 1000,
+            });
+        } catch (error) {
+            setStatus({ ...status, error });
+        }
     }
 
     return (
@@ -93,9 +164,12 @@ export default function Music() {
             musicTitle={music.title}
             artist={music.artist}
             currentTimer={currentTimer}
-            totalTimer={soundObj?.playableDurationMillis}
-            isPlaying={soundObj?.isPlaying}
-            handleMusic={handleMusic}
+            totalTimer={status?.durationMillis}
+            isPlaying={status?.isPlaying}
+            currentMillis={millis}
+            setSongPosition={setPosition}
+            setCurrentTimer={setCurrentTimer}
+            handleMusic={togglePlayPause}
         />
     );
 }

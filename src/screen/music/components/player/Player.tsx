@@ -1,26 +1,36 @@
-import React, { useState } from 'react';
-import { Slider, Text, View } from 'react-native';
-
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import React, { useEffect, useState } from 'react';
+import { Slider, View } from 'react-native';
 
 import Styles from './Player.style';
 
+interface IPlayerView {
+    totalDuration: number,
+    currentMillis: number,
+    setSongPosition: (currentPosition: number) => void
+}
 
-
-export default function Player() {
+export default function Player(props: IPlayerView) {
 
     const classes = Styles;
 
+    const { totalDuration, currentMillis, setSongPosition } = props;
+
+    function onSliderValueChange(value: number) {
+        const newTimer = Math.round(value);
+        setSongPosition(newTimer);
+    }
     return (
         <View style={classes.container}>
             <Slider
-                style={{ width: '100%', height: 0 }}
+                style={{ width: '100%', height: 40 }}
                 minimumValue={0}
-                maximumValue={1}
-                minimumTrackTintColor="#FFF"
+                maximumValue={30}
+                value={currentMillis}
+                step={0.1}
+                minimumTrackTintColor="#FFFFFF"
                 maximumTrackTintColor="#3C2D51"
                 thumbTintColor="#A4FF8E"
-                value={0.8}
+                onValueChange={(value: number) => onSliderValueChange(value)}
             />
         </View>
     );

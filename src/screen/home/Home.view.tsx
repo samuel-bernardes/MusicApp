@@ -36,14 +36,14 @@ export default function HomeView(props: ISearch) {
                 </TouchableOpacity>
             </View>
 
-            {data.length == 0 && (
+            {data?.length == 0 && (
                 <View style={classes.recomedationBox} >
                     <Text style={classes.bannerText}>Recomendados</Text>
                     <ScrollView style={classes.recommendationsContainer} horizontal={true} showsHorizontalScrollIndicator={false}>
 
-                    
-                        <Recommendations />
-                        <Recommendations />
+
+                        <Recommendations titleMusic={'Samuel'} imageMusic={'http://1.bp.blogspot.com/-cae5mWLe4Jg/VazohfjE8BI/AAAAAAAA21o/3c6VBxw07B8/s1600/daniblackdiluviocapa.png'} />
+                        <Recommendations titleMusic={'Mc John'} imageMusic={'http://s.glbimg.com/jo/g1/f/original/blog/e2f70731-9075-4754-baff-2a023c75e31f_mcguimesoufilhodalua.jpg'} />
                     </ScrollView>
                 </View>
             )}

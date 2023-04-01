@@ -17,7 +17,7 @@ export default function Header() {
         <View style={classes.container}>
             <View style={classes.box}>
                 <Icon name="compact-disc" size={30} color="#A4FF8E" />
-                <Text style={classes.title}>Musicly</Text>
+                <Text style={classes.title}>BeatDrop</Text>
             </View>
             <View style={classes.box}>
                 <Text style={classes.username}>Olá, {profile?.given_name}</Text>
