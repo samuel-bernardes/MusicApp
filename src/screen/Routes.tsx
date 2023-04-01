@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -77,7 +77,7 @@ function Root() {
 	);
 };
 
-export default function Routes() {
+function Routes() {
 
 	return (
 		<NavigationContainer>
@@ -119,3 +119,5 @@ export default function Routes() {
 		</NavigationContainer>
 	)
 }
+
+export default Routes;

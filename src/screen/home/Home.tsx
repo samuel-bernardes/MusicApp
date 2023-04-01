@@ -2,24 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native';
 import HomeView from './Home.view';
 
-import { search } from '../../service/spotifySearch/spotifySearch';
+import { search } from '../../service/spotifySearch';
 
 import Styles from './Home.style';
 import { useNavigation } from '@react-navigation/native';
 import useProfile from '../../contexts/profile/useProfile';
 import useGoogleToken from '../../contexts/googleToken/useToken';
-import { getStoreObject, setStoreObject } from '../../modules/AsyncStorage.module';
 import useMusic from '../../contexts/music/useMusic';
-
-export interface ISongs {
-    album: string;
-    artist: string;
-    id: string;
-    imageUri: string;
-    is_playable: any;
-    preview_url: any;
-    title: string;
-}
+import { ISongs } from './Home.interface';
 
 export default function Home() {
 

@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Slider, View } from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
+
+import Slider from '@react-native-community/slider';
 
 import Styles from './Player.style';
 
@@ -24,7 +26,7 @@ export default function Player(props: IPlayerView) {
             <Slider
                 style={{ width: '100%', height: 40 }}
                 minimumValue={0}
-                maximumValue={30}
+                maximumValue={totalDuration || 30}
                 value={currentMillis}
                 step={0.1}
                 minimumTrackTintColor="#FFFFFF"

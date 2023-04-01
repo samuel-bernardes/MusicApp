@@ -1,9 +1,7 @@
 import React from 'react';
 import { Searchbar } from 'react-native-paper';
-import { View } from 'react-native';
 
 import Styles from './Search.style';
-
 
 interface ISearch {
     text: string;

@@ -11,7 +11,7 @@ interface ILoginView {
 }
 
 
-export default function LoginHomeView(props: ILoginView) {
+function LoginHomeView(props: ILoginView) {
 
     const classes = Styles;
 
@@ -56,3 +56,5 @@ export default function LoginHomeView(props: ILoginView) {
 
     );
 }
+
+export default LoginHomeView;

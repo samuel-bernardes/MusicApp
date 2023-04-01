@@ -1,21 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import MusicView from './Music.view';
-import { Audio, AVPlaybackStatus } from 'expo-av';
+import { Audio } from 'expo-av';
 
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { BackHandler } from 'react-native';
 import useMusic from '../../contexts/music/useMusic';
+import { ISoundStatus } from './Music.interface';
 
-interface ISoundStatus {
-    isLoaded: boolean,
-    isLoading: boolean,
-    error: any,
-    isPlaying: boolean,
-    positionMillis: number,
-    durationMillis: number
-}
-
-export default function Music() {
+function Music() {
 
     const navigation = useNavigation();
 
@@ -29,36 +20,19 @@ export default function Music() {
 
     const [millis, setMillis] = useState(currentTimer);
 
+    const [duration, setDuration] = useState<number>();
+
     const interval = React.useRef(null)
 
     const [status, setStatus] = useState<ISoundStatus>({
         isLoaded: false,
         isLoading: false,
         error: null,
-        isPlaying: false,
-        positionMillis: 0,
-        durationMillis: 0,
+        isPlaying: false
     });
 
     useEffect(() => {
-        async function loadSound() {
-            const { sound } = await Audio.Sound.createAsync(
-                { uri: music.music },
-                { shouldPlay: false }
-            );
-            setSound(sound);
-            setCurrentTimer(status.positionMillis);
-        }
         loadSound();
-
-        return () => {
-            if (status.isPlaying && sound) {
-                sound.stopAsync();
-            }
-            if (sound) {
-                sound.unloadAsync();
-            }
-        };
     }, []);
 
     useEffect(() => {
@@ -72,24 +46,42 @@ export default function Music() {
     }, [navigation, sound]);
 
     useEffect(() => {
-        if (status.positionMillis === status.durationMillis && sound) {
-            sound.replayAsync();
+        if (millis === Math.round(duration / 1000) && sound) {
+            /* sound.replayAsync();
             setStatus({
                 ...status,
                 isPlaying: true,
-            });
+            }); */
         }
-    }, [status.positionMillis, status.durationMillis]);
+    }, [millis]);
 
     useEffect(() => {
-        if (status.positionMillis === status.durationMillis && sound) {
-            sound.replayAsync();
-            setStatus({
-                ...status,
-                isPlaying: true,
-            });
+        if (!status.isPlaying) {
+            if (interval.current) clearInterval(interval.current)
+            return;
         }
-    }, [status.positionMillis, status.durationMillis]);
+        interval.current = setInterval(() => {
+            countDown();
+        }, 1000)
+        return () => clearInterval(interval.current);
+    }, [status.isPlaying]);
+
+    useEffect(() => {
+        getDuration();
+    }, [sound]);
+
+    useEffect(() => {
+        setMillis(currentTimer);
+    }, [currentTimer]);
+
+    async function loadSound() {
+        const { sound } = await Audio.Sound.createAsync(
+            { uri: music.music },
+            { shouldPlay: false }
+        );;
+        setStatus(status);
+        setSound(sound);
+    }
 
     function countDown() {
         setMillis((time) => {
@@ -103,21 +95,6 @@ export default function Music() {
             return timeLeft;
         })
     }
-
-    useEffect(() => {
-        if (!status.isPlaying) {
-            if (interval.current) clearInterval(interval.current)
-            return;
-        }
-        interval.current = setInterval(() => {
-            countDown();
-        }, 1000)
-        return () => clearInterval(interval.current);
-    }, [status.isPlaying])
-
-    useEffect(() => {
-        setMillis(currentTimer);
-    }, [currentTimer])
 
     function togglePlayPause() {
         if (!sound) {
@@ -148,12 +125,17 @@ export default function Music() {
         try {
             await sound.setPositionAsync(positionMillis * 1000);
             setCurrentTimer(positionMillis);
-            setStatus({
-                ...status,
-                positionMillis: positionMillis * 1000,
-            });
         } catch (error) {
             setStatus({ ...status, error });
+        }
+    }
+
+    async function getDuration() {
+        if (sound) {
+
+            let localStatus: any = await sound.getStatusAsync();
+
+            setDuration(localStatus?.durationMillis);
         }
     }
 
@@ -164,7 +146,7 @@ export default function Music() {
             musicTitle={music.title}
             artist={music.artist}
             currentTimer={currentTimer}
-            totalTimer={status?.durationMillis}
+            totalTimer={Math.round(duration / 1000)}
             isPlaying={status?.isPlaying}
             currentMillis={millis}
             setSongPosition={setPosition}
@@ -172,4 +154,6 @@ export default function Music() {
             handleMusic={togglePlayPause}
         />
     );
-}
+};
+
+export default Music;

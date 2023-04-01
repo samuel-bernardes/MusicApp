@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import MusicContext from "./Context";
 import { IMusic } from "./types";
 
-const MusicProvider: React.FC = ({ children }) => {
+const MusicProvider: React.FC = ({ children }: React.PropsWithChildren<{}>) => {
     const [music, setMusic] = useState<IMusic>();
 
     const setNewMusic = (music: IMusic) => {

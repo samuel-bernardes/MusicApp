@@ -7,7 +7,7 @@ import useProfile from '../../contexts/profile/useProfile';
 import { colors } from '../../theme/colors';
 import Styles from './Profile.style';
 
-export default function ProfileView(props) {
+function ProfileView(props) {
 
     const classes = Styles;
 
@@ -28,8 +28,8 @@ export default function ProfileView(props) {
                 <Text style={classes.infosText}>Desenvolvedor procurando uma oportunidade</Text>
             </View>
 
-
-
         </Container>
     );
 }
+
+export default ProfileView;

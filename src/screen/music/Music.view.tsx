@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { View, SafeAreaView, StatusBar, Image, Text } from 'react-native';
+import { View, StatusBar, Image, Text } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Container from '../../components/container/Container';
@@ -9,27 +9,14 @@ import Player from './components/player/Player';
 import ToolBar from './components/toolbar/ToolBar';
 
 import Styles from './Music.style'
+import { IMusicView } from './Music.interface';
 
-interface IMusicView {
-    image: string,
-    album: string,
-    artist: string,
-    musicTitle: string,
-    currentTimer: number,
-    isPlaying: boolean,
-    totalTimer: number,
-    currentMillis: number,
-    setCurrentTimer: (currentTimer: number) => void,
-    setSongPosition: (currentPosition: number) => void,
-    handleMusic: () => void
-}
-
-export default function MusicView(props: IMusicView) {
+function MusicView(props: IMusicView) {
 
     const classes = Styles;
 
-    const { image, album, musicTitle, artist, totalTimer, isPlaying, currentTimer,
-        currentMillis, setCurrentTimer, handleMusic, setSongPosition,
+    const { image, album, musicTitle, artist, totalTimer, isPlaying,
+        currentMillis, handleMusic, setSongPosition
     } = props;
 
     return (
@@ -44,7 +31,6 @@ export default function MusicView(props: IMusicView) {
                     <Icon name="angle-down" size={20} color="#FAFAFA"></Icon>
                 </View>
 
-
                 <Image
                     style={classes.image}
                     source={{ uri: image }}
@@ -57,11 +43,9 @@ export default function MusicView(props: IMusicView) {
                 <Player totalDuration={totalTimer} currentMillis={currentMillis} setSongPosition={setSongPosition} />
 
                 <ToolBar
-                    currentTimer={currentTimer}
                     isPlaying={isPlaying}
                     currentMillis={currentMillis}
                     handleMusic={handleMusic}
-                    setCurrentTimer={setCurrentTimer}
                 />
 
             </View>
@@ -69,4 +53,6 @@ export default function MusicView(props: IMusicView) {
         </Container>
 
     );
-}
+};
+
+export default MusicView;

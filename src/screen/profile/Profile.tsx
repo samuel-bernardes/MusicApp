@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
-
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import React from 'react';
 import ProfileView from './Profile.view';
 import Styles from "./Profile.style";
 
-export default function Profile() {
+function Profile() {
 
     const classes = Styles;
 
@@ -12,3 +10,5 @@ export default function Profile() {
         <ProfileView />
     );
 }
+
+export default Profile;

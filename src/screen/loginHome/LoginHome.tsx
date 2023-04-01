@@ -1,11 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import LoginView from './LoginHome.view';
 
 import { useNavigation } from "@react-navigation/native";
-import useProfile from '../../contexts/profile/useProfile';
 
-
-export default function LoginHome() {
+function LoginHome() {
 
     const navigation = useNavigation();
 
@@ -20,3 +18,5 @@ export default function LoginHome() {
         />
     );
 }
+
+export default LoginHome;

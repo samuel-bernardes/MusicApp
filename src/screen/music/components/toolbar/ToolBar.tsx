@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { CountDown } from '../../../../components/countDown/CountDown';
 
 import Styles from './ToolBar.style';
 
 interface IToolbar {
-    currentTimer: number,
     isPlaying: boolean,
     currentMillis: number,
-    setCurrentTimer: (currentTimer: number) => void,
     handleMusic: () => void;
 }
 
@@ -18,7 +15,7 @@ export default function ToolBar(props: IToolbar) {
 
     const classes = Styles;
 
-    const { isPlaying, currentTimer, currentMillis, setCurrentTimer, handleMusic } = props;
+    const { isPlaying,  currentMillis, handleMusic } = props;
 
     function formatTime(time) {
         return time < 10 ? `0${time}` : time;

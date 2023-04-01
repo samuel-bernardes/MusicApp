@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getAccessToken } from "../spotifyToken/spotifyToken";
+import { getAccessToken } from "./spotifyToken";
 
 const baseUrl = "https://api.spotify.com/v1";
 
@@ -9,7 +9,7 @@ type Props = {
     value: string;
 };
 
-export const search = async ({ offset, limit, value }: Props) => {
+async function search({ offset, limit, value }: Props) {
     const { access_token } = await getAccessToken();
 
     const data = await axios(
@@ -50,3 +50,5 @@ export const search = async ({ offset, limit, value }: Props) => {
 
     return data;
 };
+
+export default search;

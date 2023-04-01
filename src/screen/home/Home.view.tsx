@@ -6,15 +6,7 @@ import Recommendations from '../../components/recommendations/Recommendations';
 import Search from '../../components/search/Search';
 import { colors } from '../../theme/colors';
 import Styles from './Home.style';
-
-interface ISearch {
-    text: string;
-    data: any;
-    renderList: any;
-    bannerVisible: "none" | "flex";
-    iconFunction: () => void;
-    handleSearchChange: (text: string) => void;
-}
+import { ISearch } from './Home.interface';
 
 export default function HomeView(props: ISearch) {
 
@@ -51,6 +43,13 @@ export default function HomeView(props: ISearch) {
             <FlatList
                 style={{ overflow: "hidden", marginBottom: 20, marginTop: 4 }}
                 data={data}
+                keyExtractor={item => item.id}
+                getItemLayout={(data, index) => (
+                    { length: 120, offset: 120 * index, index }
+                )}
+                initialNumToRender={10}
+                maxToRenderPerBatch={10}
+                removeClippedSubviews={true}
                 renderItem={renderList}
             />
 

@@ -5,8 +5,8 @@ import { Image, Text, TouchableOpacity } from 'react-native';
 import Styles from './Recommendations.style';
 
 interface IRecommendations {
-    titleMusic: string;
-    imageMusic: string;
+    titleMusic: string,
+    imageMusic: string
 }
 
 export default function Recommendations(props: IRecommendations) {
