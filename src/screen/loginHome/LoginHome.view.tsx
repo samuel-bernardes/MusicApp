@@ -10,7 +10,6 @@ interface ILoginView {
     textFunction: () => void;
 }
 
-
 function LoginHomeView(props: ILoginView) {
 
     const classes = Styles;

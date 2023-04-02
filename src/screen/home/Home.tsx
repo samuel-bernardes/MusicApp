@@ -11,7 +11,7 @@ import useGoogleToken from '../../contexts/googleToken/useToken';
 import useMusic from '../../contexts/music/useMusic';
 import { ISongs } from './Home.interface';
 
-export default function Home() {
+function Home() {
 
     const classes = Styles;
 
@@ -116,3 +116,5 @@ export default function Home() {
         )
     );
 }
+
+export default Home;

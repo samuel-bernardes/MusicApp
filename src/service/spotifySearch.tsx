@@ -9,7 +9,7 @@ type Props = {
     value: string;
 };
 
-async function search({ offset, limit, value }: Props) {
+export const search = async ({ offset, limit, value }: Props) => {
     const { access_token } = await getAccessToken();
 
     const data = await axios(
