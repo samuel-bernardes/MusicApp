@@ -1,9 +1,9 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 
 export default StyleSheet.create({
     container: {
         width: '100%',
-        paddingTop: 20,
+        paddingTop: Platform.OS === 'ios' ? 44 : 0,
         paddingHorizontal: 24,
         backgroundColor: '#27153E',
         justifyContent: 'space-between',
@@ -11,19 +11,20 @@ export default StyleSheet.create({
         alignItems: 'center'
     },
     box: {
-        flexDirection: 'row', 
+        flexDirection: 'row',
         alignItems: 'center'
     },
     title: {
         fontWeight: 'bold',
         alignItems: 'center',
-        fontSize: 24,
-        marginLeft: 8,
+        fontSize: Platform.OS === 'ios' ? 24 : 20,
+        paddingLeft: 8,
         color: '#FFF'
     },
     username: {
-        fontSize: 14,
+        fontSize: 16,
         fontWeight: '600',
-        color: '#FFF'
+        color: '#FFF',
+        textAlign: 'center'
     }
 });

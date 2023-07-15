@@ -75,9 +75,10 @@ function Music() {
     }, [currentTimer]);
 
     async function loadSound() {
+        await Audio.requestPermissionsAsync();
         const { sound } = await Audio.Sound.createAsync(
             { uri: music.music },
-            { shouldPlay: false }
+            { shouldPlay: false },
         );;
         setStatus(status);
         setSound(sound);
