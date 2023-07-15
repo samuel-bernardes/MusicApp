@@ -28,7 +28,7 @@ function MusicView(props: IMusicView) {
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={[classes.textAlbum, classes.textColor, { marginRight: 12 }]}>{album}</Text>
 
-                    <Icon name="angle-down" size={20} color="#FAFAFA"></Icon>
+                    <Icon name="angle-down" size={20} color="#FAFAFA" />
                 </View>
 
                 <Image

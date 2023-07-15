@@ -47,11 +47,12 @@ function Music() {
 
     useEffect(() => {
         if (millis === Math.round(duration / 1000) && sound) {
-            /* sound.replayAsync();
+            sound.replayAsync();
             setStatus({
                 ...status,
                 isPlaying: true,
-            }); */
+            });
+            setMillis(0);
         }
     }, [millis]);
 
